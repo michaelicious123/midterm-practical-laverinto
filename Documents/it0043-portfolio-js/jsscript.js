@@ -22,3 +22,9 @@ function setupNavigation() {
   const menu = document.querySelector("#site-nav");
 
   if (!button || !menu) return;
+
+// Keeps the button state and menu visibility in sync.
+  function closeMenu() {
+    menu.hidden = true;
+    button.setAttribute("aria-expanded", "false");
+  }
