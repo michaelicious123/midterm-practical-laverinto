@@ -28,3 +28,9 @@ function setupNavigation() {
     menu.hidden = true;
     button.setAttribute("aria-expanded", "false");
   }
+// Opens or closes the menu when the button is activated.
+  function toggleMenu() {
+    const isOpen = button.getAttribute("aria-expanded") === "true";
+    menu.hidden = isOpen;
+    button.setAttribute("aria-expanded", String(!isOpen));
+  }
