@@ -60,3 +60,54 @@ function setupDarkMode() {
 
   const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
   const startsDark = savedTheme ? savedTheme === "dark" : prefersDark;
+// Applies the selected theme and updates the button for assistive technology.
+  function applyTheme(isDark) {
+    document.documentElement.classList.toggle("dark-mode", isDark);
+    button.setAttribute("aria-pressed", String(isDark));
+  }
+
+  applyTheme(startsDark);
+
+  // Changes the theme when the visitor activates the theme button.
+  function toggleTheme() {
+    const isDark = !document.documentElement.classList.contains("dark-mode");
+    applyTheme(isDark);
+
+    try {
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+    } catch {
+      // Theme switching still works for this page view.
+    }
+  }
+
+  button.addEventListener("click", toggleTheme);
+}
+// Builds one project card from an object in the projects array.
+function createProjectCard(project) {
+  const card = document.createElement("article");
+  const title = document.createElement("h3");
+  const description = document.createElement("p");
+  const link = document.createElement("a");
+
+  title.textContent = project.title;
+  description.textContent = project.description;
+  link.textContent = "View project";
+  link.href = project.link;
+
+  card.append(title, description, link);
+  return card;
+}
+
+// Renders project cards from data so the content is maintained in one array.
+function renderProjects() {
+  const container = document.querySelector("#project-list");
+  if (!container) return;
+
+  if (projects.length === 0) {
+    container.textContent = "Projects will be added soon.";
+    return;
+  }
+
+  const cards = projects.map(createProjectCard);
+  container.replaceChildren(...cards);
+}
