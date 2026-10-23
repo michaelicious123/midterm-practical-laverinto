@@ -34,3 +34,29 @@ function setupNavigation() {
     menu.hidden = isOpen;
     button.setAttribute("aria-expanded", String(!isOpen));
   }
+
+  button.addEventListener("click", toggleMenu);
+
+  menu.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", closeMenu);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeMenu();
+  });
+}
+// Applies a theme and remembers the visitor's choice when storage is available.
+function setupDarkMode() {
+  const button = document.querySelector("#theme-toggle");
+  if (!button) return;
+
+  let savedTheme = null;
+
+  try {
+    savedTheme = localStorage.getItem("theme");
+  } catch {
+    // The page can still work when browser storage is unavailable.
+  }
+
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const startsDark = savedTheme ? savedTheme === "dark" : prefersDark;
