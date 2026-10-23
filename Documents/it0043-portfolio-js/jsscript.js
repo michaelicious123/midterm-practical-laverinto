@@ -111,3 +111,63 @@ function renderProjects() {
   const cards = projects.map(createProjectCard);
   container.replaceChildren(...cards);
 }
+// Checks every field on submission and explains each problem beside its field.
+function setupContactForm() {
+  const form = document.querySelector("#contact-form");
+  if (!form) return;
+
+  const nameField = form.querySelector("#name");
+  const emailField = form.querySelector("#email");
+  const messageField = form.querySelector("#message");
+  const status = form.querySelector("#form-status");
+
+  if (!nameField || !emailField || !messageField || !status) return;
+
+  // Displays or clears the message associated with one field.
+  function setFieldError(field, message) {
+    const error = document.querySelector(`#${field.id}-error`);
+    error.textContent = message;
+    field.setAttribute("aria-invalid", String(Boolean(message)));
+  }
+
+  // Validates the fields and updates the page without a generic alert.
+  function handleSubmit(event) {
+    event.preventDefault();
+    status.textContent = "";
+
+    const name = nameField.value.trim();
+    const email = emailField.value.trim();
+    const message = messageField.value.trim();
+
+    const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    setFieldError(nameField, name ? "" : "Please enter your name.");
+    setFieldError(
+      emailField,
+      validEmail ? "" : "Please enter a valid email address."
+    );
+    setFieldError(
+      messageField,
+      message ? "" : "Please enter a message."
+    );
+
+    const hasErrors = [name, validEmail, message].some(
+      (value) => !value
+    );
+
+    if (hasErrors) {
+      status.textContent = "Please correct the highlighted fields.";
+      return;
+    }
+
+    status.textContent = "The form passed validation.";
+    form.reset();
+  }
+
+  form.addEventListener("submit", handleSubmit);
+}
+
+setupNavigation();
+setupDarkMode();
+renderProjects();
+setupContactForm();
